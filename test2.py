@@ -46,58 +46,37 @@ class Loss_MeanSquaredError():
         self.dinputs = -2 * (y_true - dvalues) / outputs
         self.dinputs = self.dinputs / samples
 
-def normalize(values):
-    min_value = np.min(values)
-    max_value = np.max(values)
 
-    normalized_values = (values - min_value) / (max_value - min_value)
-
-    return normalized_values
-
-x = np.linspace(0, (4 * (np.pi)), 100).reshape(-1, 1)
-y = np.sin(2*x)
-x = normalize(x)
+x = np.random.randn(500,2)*10 -5
+y = []
+for item in x:
+     y.append([item[0]*item[1]])
 
 # A layer with 1 input and 8 output neurons
 
-hiddenNodes = 256
-layer1 = Layer_Dense(1, hiddenNodes)
+hiddenNodes = 512
 
+layer1 = Layer_Dense(2, hiddenNodes)
 # Apply ReLU activation function to the output of the dense layer
 activation1 = Activation_ReLU()
-
-# Create a second layer with 8 input and 256 output neurons
-layer2 = Layer_Dense(hiddenNodes, 128)
-
-# Apply ReLU activation function to the output of the second dense layer
-activation2 = Activation_ReLU()
-
-# Create a third layer with 256 input and 1 output neurons
-layer3 = Layer_Dense(128, 1)
-
+# Create a second layer with 8 input and 1 output neurons
+layer2 = Layer_Dense(hiddenNodes, 1)
 # Calculate the loss using Mean Squared Error
 loss_function = Loss_MeanSquaredError()
-
-epochs = 50000
-learning_rate = 0.05
+epochs = 15000
+learning_rate = 0.0075
 for epoch in range(epochs):
     # Forward pass
     layer1.forward(x)
     activation1.forward(layer1.output)
     layer2.forward(activation1.output)
-    activation2.forward(layer2.output)
-    layer3.forward(activation2.output)
     # Calculate loss
-    loss = loss_function.calculate(layer3.output, y)
-
-    if loss < .01:
-         learning_rate = 0.005
+    loss = loss_function.calculate(layer2.output, y)
 
     
-    loss_function.backward(layer3.output, y)
-    layer3.backward(loss_function.dinputs)
-    activation2.backward(layer3.dinputs)
-    layer2.backward(activation2.dinputs)
+
+    loss_function.backward(layer2.output, y)
+    layer2.backward(loss_function.dinputs)
     activation1.backward(layer2.dinputs)
     layer1.backward(activation1.dinputs)
     # Update weights and biases
@@ -105,8 +84,6 @@ for epoch in range(epochs):
     layer1.biases -= learning_rate * layer1.dbiases
     layer2.weights -= learning_rate * layer2.dweights
     layer2.biases -= learning_rate * layer2.dbiases
-    layer3.weights -= learning_rate * layer3.dweights
-    layer3.biases -= learning_rate * layer3.dbiases
     if epoch % 100 == 0:
         print(f"Epoch: {epoch} Total Loss: {loss:.4f}")
 # Test the trained model
@@ -116,14 +93,12 @@ test_input = []
 for i in range(0,500):
 	test_input.append([12/500*i])
 test_input = np.array(test_input)
-layer1.forward(normalize(test_input))
+
+layer1.forward(test_input)
 activation1.forward(layer1.output)
 layer2.forward(activation1.output)
-activation2.forward(layer2.output)
-layer3.forward(activation2.output)
-
-loss = loss_function.calculate(layer3.output, np.sin(test_input*2))
-prediction = layer3.output
+loss = loss_function.calculate(layer2.output, np.sin(test_input*2))
+prediction = layer2.output
 
 plt.plot(test_input, np.sin(test_input * 2))
 plt.plot(test_input, prediction)
