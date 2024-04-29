@@ -47,12 +47,12 @@ class Loss_MeanSquaredError():
         self.dinputs = self.dinputs / samples
 
 
-x = np.linspace(-3, (5 * (np.pi)), 500).reshape(-1, 1)
+x = np.linspace(-3, (5 * (np.pi)), 30).reshape(-1, 1)
 y = np.sin(2*x)
 
 # A layer with 1 input and 8 output neurons
 
-hiddenNodes = 256
+hiddenNodes = 512
 
 layer1 = Layer_Dense(1, hiddenNodes)
 # Apply ReLU activation function to the output of the dense layer
@@ -61,27 +61,29 @@ activation1 = Activation_ReLU()
 layer2 = Layer_Dense(hiddenNodes, 1)
 # Calculate the loss using Mean Squared Error
 loss_function = Loss_MeanSquaredError()
-epochs = 250000
-learning_rate = 0.005
+epochs = 150000
+learning_rate = 0.01
 for epoch in range(epochs):
-	# Forward pass
+    # Forward pass
     layer1.forward(x)
     activation1.forward(layer1.output)
     layer2.forward(activation1.output)
-	# Calculate loss
+    # Calculate loss
     loss = loss_function.calculate(layer2.output, y)
+
     
+
     loss_function.backward(layer2.output, y)
     layer2.backward(loss_function.dinputs)
     activation1.backward(layer2.dinputs)
     layer1.backward(activation1.dinputs)
-	# Update weights and biases
+    # Update weights and biases
     layer1.weights -= learning_rate * layer1.dweights
     layer1.biases -= learning_rate * layer1.dbiases
     layer2.weights -= learning_rate * layer2.dweights
     layer2.biases -= learning_rate * layer2.dbiases
     if epoch % 100 == 0:
-          print(f"Epoch: {epoch} Total Loss: {loss:.4f}")
+        print(f"Epoch: {epoch} Total Loss: {loss:.4f}")
 # Test the trained model
 
 
