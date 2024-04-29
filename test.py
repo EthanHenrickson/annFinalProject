@@ -54,7 +54,10 @@ def normalize(values):
 
     return normalized_values
 
-x = np.linspace(0, (4 * (np.pi)), 100).reshape(-1, 1)
+x = []
+for i in range(0,500):
+	x.append([12/500*i])
+x = np.array(x)
 y = np.sin(2*x)
 x = normalize(x)
 
@@ -78,7 +81,7 @@ layer3 = Layer_Dense(128, 1)
 # Calculate the loss using Mean Squared Error
 loss_function = Loss_MeanSquaredError()
 
-epochs = 50000
+epochs = 60000
 learning_rate = 0.05
 for epoch in range(epochs):
     # Forward pass
@@ -91,7 +94,7 @@ for epoch in range(epochs):
     loss = loss_function.calculate(layer3.output, y)
 
     if loss < .01:
-         learning_rate = 0.005
+         learning_rate = 0.0025
 
     
     loss_function.backward(layer3.output, y)
