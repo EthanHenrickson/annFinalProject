@@ -55,16 +55,24 @@ def normalize(values):
     return normalized_values
 
 x = []
+y = []
 for i in range(0,500):
-	x.append([12/500*i])
+    input1 = np.random.random()*10-5
+    input2 = np.random.random()*10-5
+
+    x.append([input1,input2])
+    y.append([input1*input2])
 x = np.array(x)
-y = np.sin(2*x)
+x= normalize(x)
+y = np.array(y)
+
+
 x = normalize(x)
 
 # A layer with 1 input and 8 output neurons
 
 hiddenNodes = 256
-layer1 = Layer_Dense(1, hiddenNodes)
+layer1 = Layer_Dense(2, hiddenNodes)
 
 # Apply ReLU activation function to the output of the dense layer
 activation1 = Activation_ReLU()
@@ -81,8 +89,8 @@ layer3 = Layer_Dense(128, 1)
 # Calculate the loss using Mean Squared Error
 loss_function = Loss_MeanSquaredError()
 
-epochs = 60000
-learning_rate = 0.05
+epochs = 10000
+learning_rate = 0.005
 for epoch in range(epochs):
     # Forward pass
     layer1.forward(x)
@@ -115,23 +123,40 @@ for epoch in range(epochs):
 # Test the trained model
 
 
+og_input = []
 test_input = []
+y = []
 for i in range(0,500):
-	test_input.append([12/500*i])
+    input1 = np.random.random()*10-5
+    input2 = np.random.random()*10-5
+
+    y.append([input1*input2])
+    og_input.append([input1,input2])
+    test_input.append([input1,input2])
+
+
 test_input = np.array(test_input)
-layer1.forward(normalize(test_input))
+test_input = normalize(test_input)
+
+print(og_input[0])
+print(y[0])
+print("")
+
+     
+layer1.forward(test_input)
 activation1.forward(layer1.output)
 layer2.forward(activation1.output)
 activation2.forward(layer2.output)
 layer3.forward(activation2.output)
 
-loss = loss_function.calculate(layer3.output, np.sin(test_input*2))
+loss = loss_function.calculate(layer3.output, y)
 prediction = layer3.output
 
-plt.plot(test_input, np.sin(test_input * 2))
-plt.plot(test_input, prediction)
+print(prediction[0])
+print(loss)
 
+plt.plot(og_input, y)
+plt.plot(test_input, prediction)
 
 plt.show()
 
-print(loss)
