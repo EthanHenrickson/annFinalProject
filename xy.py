@@ -69,21 +69,13 @@ y = np.array(y)
 
 x = normalize(x)
 
-# A layer with 1 input and 8 output neurons
 
-hiddenNodes = 256
-layer1 = Layer_Dense(2, hiddenNodes)
-
-# Apply ReLU activation function to the output of the dense layer
+layer1 = Layer_Dense(2, 256)
 activation1 = Activation_ReLU()
 
-# Create a second layer with 8 input and 256 output neurons
-layer2 = Layer_Dense(hiddenNodes, 128)
-
-# Apply ReLU activation function to the output of the second dense layer
+layer2 = Layer_Dense(256, 128)
 activation2 = Activation_ReLU()
 
-# Create a third layer with 256 input and 1 output neurons
 layer3 = Layer_Dense(128, 1)
 
 # Calculate the loss using Mean Squared Error
@@ -120,9 +112,9 @@ for epoch in range(epochs):
     layer3.biases -= learning_rate * layer3.dbiases
     if epoch % 100 == 0:
         print(f"{loss:.4f}")
+
+
 # Test the trained model
-
-
 og_input = []
 test_input = []
 a = []
