@@ -89,7 +89,7 @@ layer3 = Layer_Dense(128, 1)
 # Calculate the loss using Mean Squared Error
 loss_function = Loss_MeanSquaredError()
 
-epochs = 10000
+epochs = 5000
 learning_rate = 0.005
 for epoch in range(epochs):
     # Forward pass
@@ -119,17 +119,23 @@ for epoch in range(epochs):
     layer3.weights -= learning_rate * layer3.dweights
     layer3.biases -= learning_rate * layer3.dbiases
     if epoch % 100 == 0:
-        print(f"Epoch: {epoch} Total Loss: {loss:.4f}")
+        print(f"{loss:.4f}")
 # Test the trained model
 
 
 og_input = []
 test_input = []
+a = []
+b = []
+c = []
 y = []
 for i in range(0,500):
     input1 = np.random.random()*10-5
     input2 = np.random.random()*10-5
 
+    a.append(input1)
+    b.append(input2)
+    c.append(input1 * input2)
     y.append([input1*input2])
     og_input.append([input1,input2])
     test_input.append([input1,input2])
@@ -141,8 +147,10 @@ test_input = normalize(test_input)
 print(og_input[0])
 print(y[0])
 print("")
+print("")
+print("")
 
-     
+
 layer1.forward(test_input)
 activation1.forward(layer1.output)
 layer2.forward(activation1.output)
@@ -159,4 +167,3 @@ plt.plot(og_input, y)
 plt.plot(test_input, prediction)
 
 plt.show()
-

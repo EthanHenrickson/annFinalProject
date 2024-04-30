@@ -110,7 +110,7 @@ for epoch in range(epochs):
     layer2.biases -= learning_rate * layer2.dbiases
     layer3.weights -= learning_rate * layer3.dweights
     layer3.biases -= learning_rate * layer3.dbiases
-    if epoch % 100 == 0:
+    if epoch % 1000 == 0:
         print(f"Epoch: {epoch} Total Loss: {loss:.4f}")
 # Test the trained model
 

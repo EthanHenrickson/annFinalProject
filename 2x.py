@@ -81,8 +81,8 @@ layer3 = Layer_Dense(1, 1)
 # Calculate the loss using Mean Squared Error
 loss_function = Loss_MeanSquaredError()
 
-epochs = 100000
-learning_rate = 0.001
+epochs = 40000
+learning_rate = 0.01
 for epoch in range(epochs):
     # Forward pass
     layer1.forward(x)
@@ -111,7 +111,7 @@ for epoch in range(epochs):
     layer3.weights -= learning_rate * layer3.dweights
     layer3.biases -= learning_rate * layer3.dbiases
     if epoch % 100 == 0:
-        print(f"Epoch: {epoch} Total Loss: {loss:.4f}")
+        print(f"{loss:.4f}")
 # Test the trained model
 
 
